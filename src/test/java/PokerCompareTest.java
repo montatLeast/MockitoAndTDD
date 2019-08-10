@@ -12,4 +12,13 @@ public class PokerCompareTest {
         Assert.assertEquals("Player 2 Win", result);
     }
 
+    @Test
+    public void should_return_equal_when_input_two_card_value_same(){
+        String cardGroup_1 = "2H";
+        String cardGroup_2 = "2D";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Equal", result);
+    }
+
 }
