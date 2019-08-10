@@ -75,23 +75,12 @@ public class PokerCompare {
     }
 
     private int compareTwoDeckValue(Set<Integer> deckValue_1, Set<Integer> deckValue_2,LevelEnum levelEnum){
+        if (levelEnum == LevelEnum.FOUR_OF_A_KIND){
+            return compareByRate(deckValue_1, deckValue_2, 4);
+        }
 
-        if (levelEnum == LevelEnum.THREE_OF_A_KIND){
-            int triple_1 = 0,triple_2 = 0;
-            for (Map.Entry<Integer, Integer> m : deckMap_1.entrySet()) {
-                if (m.getValue() == 3) {
-                    triple_1 = m.getKey();
-                }
-            }
-            for (Map.Entry<Integer, Integer> m : deckMap_2.entrySet()) {
-                if (m.getValue() == 3) {
-                    triple_2 = m.getKey();
-                }
-            }
-            if (triple_1 == triple_2){
-                return compareHighCard(deckValue_1, deckValue_2);
-            }
-            return triple_1 > triple_2 ? 1 : -1;
+        if (levelEnum == LevelEnum.THREE_OF_A_KIND || levelEnum == LevelEnum.FULL_HOUSE){
+            return compareByRate(deckValue_1, deckValue_2, 3);
         }
         if (levelEnum == LevelEnum.TWO_PAIR){
             int single_1 = 0,single_2 = 0;
@@ -139,6 +128,24 @@ public class PokerCompare {
         return compareHighCard(deckValue_1, deckValue_2);
     }
 
+    private int compareByRate(Set<Integer> deckValue_1, Set<Integer> deckValue_2, int rate) {
+        int base_1 = 0,base_2 = 0;
+        for (Map.Entry<Integer, Integer> m : deckMap_1.entrySet()) {
+            if (m.getValue() == rate) {
+                base_1 = m.getKey();
+            }
+        }
+        for (Map.Entry<Integer, Integer> m : deckMap_2.entrySet()) {
+            if (m.getValue() == rate) {
+                base_2 = m.getKey();
+            }
+        }
+        if (base_1 == base_2){
+            return compareHighCard(deckValue_1, deckValue_2);
+        }
+        return base_1 > base_2 ? 1 : -1;
+    }
+
     private int compareHighCard(Set<Integer> deckValue_1, Set<Integer> deckValue_2) {
         Set<Integer> allValue = new HashSet<>(deckValue_1);
         Set<Integer> retainValue = new HashSet<>(deckValue_1);
@@ -153,7 +160,18 @@ public class PokerCompare {
     }
 
     private LevelEnum calculateLevel(Set<Integer> deckValue, Map<Integer,Integer> deckMap, boolean sameColor){
-        if (sameColor){
+        if (deckValue.size() == 2){
+            for (Map.Entry<Integer, Integer> m : deckMap.entrySet()) {
+                if (m.getValue() == 4) {
+                    return LevelEnum.FOUR_OF_A_KIND;
+                }
+            }
+            return LevelEnum.FULL_HOUSE;
+        }
+        if (sameColor && deckValue.size() == 5){
+            if (checkStraight(deckValue)){
+                return LevelEnum.Straight_Flush;
+            }
             return LevelEnum.FLUSH;
         }
         if (deckValue.size() == 3){

@@ -112,5 +112,42 @@ public class PokerCompareTest {
         Assert.assertEquals("Player 2 Win", result);
     }
 
+    @Test
+    public void should_return_player_1_win_when_have_full_house(){
+        String cardGroup_1 = "2S 2C 5C 5H 5S";
+        String cardGroup_2 = "2D 3D 5D 6D 7D";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 1 Win", result);
+    }
+
+    @Test
+    public void should_return_player_2_win_when_two_deck_have_full_house(){
+        String cardGroup_1 = "2S 2C 5C 5H 5S";
+        String cardGroup_2 = "2D 2H 6C 6H 6S";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 2 Win", result);
+    }
+
+    @Test
+    public void should_return_player_2_win_when_have_four_of_a_kind(){
+        String cardGroup_1 = "2S 2C 5C 5H 5S";
+//        String cardGroup_1 = "2S 5D 5C 5H 5S";
+        String cardGroup_2 = "2D 4H 4S 4C 4D";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 2 Win", result);
+    }
+
+    @Test
+    public void should_return_player_1_win_when_have_straight_flush(){
+        String cardGroup_1 = "2S 3S 4S 5S 6S";
+//        String cardGroup_2 = "3D 4D 5D 6D 7D";
+        String cardGroup_2 = "TD JH JS JC JD";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 1 Win", result);
+    }
 
 }
