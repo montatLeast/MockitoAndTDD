@@ -85,12 +85,32 @@ public class PokerCompareTest {
     }
 
     @Test
-    public void should_return_player_2_win_when_compare_three_of_a_kinds(){
+    public void should_return_player_1_win_when_compare_three_of_a_kinds(){
         String cardGroup_1 = "2H 6D 6H 6S 9H";
         String cardGroup_2 = "2C 5C 5D 5S TS";
         PokerCompare pokerCompare = new PokerCompare();
         String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
         Assert.assertEquals("Player 1 Win", result);
     }
+
+    @Test
+    public void should_return_player_1_win_when_have_straight(){
+        String cardGroup_1 = "4C 5H 6S 7H 8D";
+        String cardGroup_2 = "2C 5C 5D 5S TS";
+//        String cardGroup_2 = "5C 6H 7S 8H 9D";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 1 Win", result);
+    }
+
+    @Test
+    public void should_return_player_2_win_when_have_fulsh(){
+        String cardGroup_1 = "4C 5H 6S 7H 8D";
+        String cardGroup_2 = "2D 3D 5D 6D 7D";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 2 Win", result);
+    }
+
 
 }

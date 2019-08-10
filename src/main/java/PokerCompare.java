@@ -9,12 +9,12 @@ public class PokerCompare {
     public static final String EQUAL = "Equal";
     public static final String PLAYER_2_WIN = "Player 2 Win";
 
-
-
     private Set<Integer> deckValue_1;
     private Set<Integer> deckValue_2;
     private Map<Integer,Integer> deckMap_1 = new HashMap<>();
     private Map<Integer,Integer> deckMap_2 = new HashMap<>();
+    private boolean sameColor_1 = false;
+    private boolean sameColor_2 = false;
 
     private LevelEnum levelEnum_1 = LevelEnum.NORMAL;
     private LevelEnum levelEnum_2 = LevelEnum.NORMAL;
@@ -22,16 +22,21 @@ public class PokerCompare {
     public String compareCardGroup(String cardGroup_1, String cardGroup_2) {
         List<Card> deck_1 = initCardGroup(cardGroup_1);
         List<Card> deck_2 = initCardGroup(cardGroup_2);
+        Set<String> colorType = deck_1.stream().map(Card::getColor).collect(Collectors.toSet());
+        sameColor_1 = colorType.size() == 1;
+        colorType = deck_2.stream().map(Card::getColor).collect(Collectors.toSet());
+        sameColor_2 = colorType.size() == 1;
         int result = compareTwoDeck(deck_1, deck_2);
         return result==1 ?  PLAYER_1_WIN
                 : (result==0 ? EQUAL : PLAYER_2_WIN);
     }
 
-    private List<Card> initCardGroup(String cardGroup_1) {
+    private List<Card> initCardGroup(String cardGroup_Input) {
         List<Card> deck = new ArrayList<>();
-        String[] cardGroup = cardGroup_1.split(" ");
+        String[] cardGroup = cardGroup_Input.split(" ");
         for (String s : cardGroup){
-            Card card = new Card(CARD_VALUE.indexOf(s.charAt(0)),s.substring(1));
+            String color = s.substring(1);
+            Card card = new Card(CARD_VALUE.indexOf(s.charAt(0)), color);
             deck.add(card);
         }
         deck = deck.stream().sorted(Comparator.comparing(Card::getValue).reversed()).collect(Collectors.toList());
@@ -57,9 +62,9 @@ public class PokerCompare {
 
     private int compareTwoDeck(List<Card> deck_1, List<Card> deck_2){
         initCardSetAndMap(deck_1, deck_2);
-        levelEnum_1 = calculateLevel(deckValue_1, deckMap_1);
+        levelEnum_1 = calculateLevel(deckValue_1, deckMap_1, sameColor_1);
         int level_1 = levelEnum_1.ordinal();
-        int level_2 = calculateLevel(deckValue_2, deckMap_2).ordinal();
+        int level_2 = calculateLevel(deckValue_2, deckMap_2, sameColor_2).ordinal();
 
         if (level_1 > level_2){
             return 1;
@@ -147,7 +152,10 @@ public class PokerCompare {
         return deckValue_1.contains(max) ? 1 : -1;
     }
 
-    private LevelEnum calculateLevel(Set<Integer> deckValue, Map<Integer,Integer> deckMap){
+    private LevelEnum calculateLevel(Set<Integer> deckValue, Map<Integer,Integer> deckMap, boolean sameColor){
+        if (sameColor){
+            return LevelEnum.FLUSH;
+        }
         if (deckValue.size() == 3){
             for (Map.Entry<Integer, Integer> m : deckMap.entrySet()) {
                 if (m.getValue() == 3) {
@@ -158,8 +166,22 @@ public class PokerCompare {
         }
         else if (deckValue.size() == 4){
             return LevelEnum.PAIR;
+        }else if (deckValue.size() == 5){
+            if (checkStraight(deckValue)){
+                return LevelEnum.STRAIGHT;
+            }
         }
         return LevelEnum.NORMAL;
+    }
+
+    private boolean checkStraight(Set<Integer> deckValue){
+        //Set<Integer>  = new HashSet<>(deckValue);
+        Integer [] check_Straight = deckValue.toArray(new Integer[] {});
+        for (int i = 0; i < check_Straight.length; i++){
+            check_Straight[i] += check_Straight.length - i;
+        }
+        Set<Integer> results = new HashSet<>(Arrays.asList(check_Straight));
+        return results.size() == 1;
     }
 
 }
