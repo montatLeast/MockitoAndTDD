@@ -70,6 +70,24 @@ public class PokerCompare {
     }
 
     private int compareTwoDeckValue(Set<Integer> deckValue_1, Set<Integer> deckValue_2,LevelEnum levelEnum){
+
+        if (levelEnum == LevelEnum.THREE_OF_A_KIND){
+            int triple_1 = 0,triple_2 = 0;
+            for (Map.Entry<Integer, Integer> m : deckMap_1.entrySet()) {
+                if (m.getValue() == 3) {
+                    triple_1 = m.getKey();
+                }
+            }
+            for (Map.Entry<Integer, Integer> m : deckMap_2.entrySet()) {
+                if (m.getValue() == 3) {
+                    triple_2 = m.getKey();
+                }
+            }
+            if (triple_1 == triple_2){
+                return compareHighCard(deckValue_1, deckValue_2);
+            }
+            return triple_1 > triple_2 ? 1 : -1;
+        }
         if (levelEnum == LevelEnum.TWO_PAIR){
             int single_1 = 0,single_2 = 0;
             for (Map.Entry<Integer, Integer> m : deckMap_1.entrySet()) {
