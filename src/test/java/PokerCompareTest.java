@@ -30,4 +30,22 @@ public class PokerCompareTest {
         Assert.assertEquals("Player 1 Win", result);
     }
 
+    @Test
+    public void should_return_player_1_win_when_a_card_group_and_high_card(){
+        String cardGroup_1 = "2H 3H 5S 6H 7H";
+        String cardGroup_2 = "2C 3C 4C 5D 7D";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 1 Win", result);
+    }
+
+    @Test
+    public void should_return_player_1_win_when_have_a_pair(){
+        String cardGroup_1 = "2H 3H 4S 5H JH";
+        String cardGroup_2 = "2C 5C 5D 6D TS";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 2 Win", result);
+    }
+
 }
