@@ -75,4 +75,15 @@ public class PokerCompareTest {
         Assert.assertEquals("Player 2 Win", result);
     }
 
+    @Test
+    public void should_return_player_2_win_when_have_three_of_a_kind(){
+        String cardGroup_1 = "2H 2D 9H 9S JH";
+        String cardGroup_2 = "2C 5C 5D 5S TS";
+        PokerCompare pokerCompare = new PokerCompare();
+        String result = pokerCompare.compareCardGroup(cardGroup_1, cardGroup_2);
+        Assert.assertEquals("Player 2 Win", result);
+    }
+
+
+
 }

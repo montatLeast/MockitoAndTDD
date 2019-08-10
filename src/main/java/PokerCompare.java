@@ -57,9 +57,9 @@ public class PokerCompare {
 
     private int compareTwoDeck(List<Card> deck_1, List<Card> deck_2){
         initCardSetAndMap(deck_1, deck_2);
-        levelEnum_1 = calculateLevel(deckValue_1);
+        levelEnum_1 = calculateLevel(deckValue_1, deckMap_1);
         int level_1 = levelEnum_1.ordinal();
-        int level_2 = calculateLevel(deckValue_2).ordinal();
+        int level_2 = calculateLevel(deckValue_2, deckMap_2).ordinal();
 
         if (level_1 > level_2){
             return 1;
@@ -129,8 +129,13 @@ public class PokerCompare {
         return deckValue_1.contains(max) ? 1 : -1;
     }
 
-    private LevelEnum calculateLevel(Set<Integer> deckValue){
+    private LevelEnum calculateLevel(Set<Integer> deckValue, Map<Integer,Integer> deckMap){
         if (deckValue.size() == 3){
+            for (Map.Entry<Integer, Integer> m : deckMap.entrySet()) {
+                if (m.getValue() == 3) {
+                    return LevelEnum.THREE_OF_A_KIND;
+                }
+            }
             return LevelEnum.TWO_PAIR;
         }
         else if (deckValue.size() == 4){
